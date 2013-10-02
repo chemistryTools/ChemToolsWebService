@@ -369,8 +369,30 @@ button.calculated-btn{
 	font-weight:bold;
 }
 
+button.show-btn{
+  width: 200px;
+  height: 50px;
+  font-size: 14px;
+	font-weight:bold;
+}
+
+
 #search-loading{
   width:60px;
   height:60px;
   text-align: center;
+}
+
+button#upload_update {
+  width:500px;
+  height:50px;
+}
+
+
+table.table-search tr td a.btn{
+  display:none;
+
+}
+table.table-search tr:hover td a.btn{
+  display:inline-block;
 }

@@ -137,7 +137,7 @@ def multi_inputform(request):
 def history_view(request):
     """
     """
-    result_sets = SuiteTask.objects.filter(user__user=request.user)
+    result_sets = SuiteTask.objects.filter(user__user=request.user).order_by('-start_time')
 
     #Add more attributes inito SuiteTask_list
     for task in result_sets:
@@ -152,15 +152,41 @@ def history_view(request):
 
 #TODO: Add only user decorators
 @login_required
-def details_view(request, sid=None):
+def suite_details_view(request, sid=None):
     """
+    Suitetask details view
     """
     suitetask = get_object_or_404(SuiteTask, sid=sid)
     single_lists = SingleTask.objects.filter(sid=sid)
-    molfile_lists = MolFile.objects.filter(sid=sid,
-                                           file_source__category=ORIGIN_UPLOAD)
 
     return render(request, 'features/details.html',
                   {"suitetask": suitetask,
-                   "single_lists": single_lists,
-                   "molfile_lists": molfile_lists})
+                   "single_lists": single_lists})
+
+
+def task_details_context(pid):
+    """
+    """
+    singletask = get_object_or_404(SingleTask, pid=pid)
+
+    try:
+        search_engine = SearchEngineModel.objects.get(smiles=singletask.file_obj.smiles)
+    except Exception, err:
+        loginfo(p=err)
+        search_engine = None
+
+    re_context = {"singletask": singletask,\
+                  "search_engine": search_engine}
+
+    return re_context
+
+
+#TODO: Add only user decorators
+@login_required
+def task_details_view(request, pid=None):
+    """
+    Every singletask details view
+    """
+    re_context = task_details_context(pid)
+
+    return render(request, 'widgets/task_details.html', re_context)
