@@ -5,7 +5,7 @@
 		<div class="span4">
 				<!--Sidebar content: pic and some introduction-->
 			<h3>Structure</h3>
-      <img id="last_picture" src="{{STATIC_URL}}{{search_result.content.imagepath }}" style="width: 120px; height: 120px;">		
+      <img id="last_picture" src="{{search_result.content.imagepath }}" style="width: 120px; height: 120px;">		
 			<br/>	
 			<br/>			
 			<div class="caption">
@@ -64,9 +64,8 @@
 						</tr>
 						<tr class="warning">
 							<td>mf</td>
-              {% autoescape off %}
-              <td id="mf">{{ search_result.content.mf}}</td>
-              {% endautoescape %}
+              <td id="mf">
+              </td>
 						</tr>
 						<tr class="important">
 							<td>molecular weight</td>

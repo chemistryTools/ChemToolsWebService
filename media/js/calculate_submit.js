@@ -3,8 +3,6 @@
  * the 
  */
 
-// inital hide
-
 var table_data;
 
 $(document).ready(function(){
@@ -19,16 +17,16 @@ $(document).ready(function(){
   $('#unvalid_results').hide();
 
   $('#search-loading').hide();
+  $("div#commit_content").hide();
 });
 
-//raw content copy
 $("[rel='raw_content']").change(function(){
   var name = $(this).attr('id') + "_copy";
   //TODO: should check whether the element exists;
+  console.log($(this).val());
   $("#"+name).text($(this).val());
 });
 
-//raw choice copy
 $("[rel='raw_choice']").change(function(){
   var name = $(this).attr("id") + "_selected";
   if($(this).attr("checked") === "checked")
@@ -43,34 +41,44 @@ $("[rel='raw_choice']").change(function(){
     }
 });
 
-// modified choice copy, it means KOA, KOF ,... model choice
 $("[rel='button-switch']").click(function(){
-  var show_element = "#"+ $(this).attr("id") + "_copy";
-  var model = $(this).attr("model");
-  var checked_element ="#label_id_" + model;
-  var temperature_element = "#temperature__" + model; 
-  var humidity_element = "#humidity_" + model; 
-  var other_element = "#other_" + model; 
+  var show= "#"+ $(this).attr("id") + "_copy";
+  var checked="#label_id_" + $(this).attr("model");
  
-  if($(checked_element).attr("visible") === "false")
+  if($(checked).attr("visible") === "false")
     {
-      $(this).text("undo this choice");
-      $(this).toggleClass("btn-danger");
-      $(checked_element).attr("visible", "true");
-      $(checked_element).show();
-      $(show_element).attr("visible", "true");
-      $(show_element).show();
+      $(this).text("undo this choice").toggleClass("btn-danger");
+      $(checked).attr("visible", "true").show();
+      $(show).attr("visible", "true").show();
     }
   else
     {
-      $(this).text("Please choice");
-      $(this).toggleClass("btn-danger");
-      $(checked_element).attr("visible", "false");
-      $(checked_element).hide();
-      $(show_element).attr("visible", "false");
-      $(show_element).hide(); 
+      $(this).text("Choice This Model!").toggleClass("btn-danger");
+      $(checked).attr("visible", "false").hide();
+      $(show).attr("visible", "false").hide(); 
     }
 });
+
+$("#model-choice-all").click(function(){
+  $("[rel=button-switch]").each(function(){
+    var show= "#"+ $(this).attr("id") + "_copy";
+    var checked="#label_id_" + $(this).attr("model");
+    $(this).text("undo this choice").addClass("btn-danger");
+    $(checked).attr("visible", "true").show();
+    $(show).attr("visible", "true").show();
+  });
+});
+
+$("#model-cancel-all").click(function(){
+  $("[rel=button-switch]").each(function(){
+    var show= "#"+ $(this).attr("id") + "_copy";
+    var checked="#label_id_" + $(this).attr("model");
+    $(this).text("Choice This Model!").removeClass("btn-danger");
+    $(checked).attr("visible", "false").hide();
+    $(show).attr("visible", "false").hide(); 
+  });
+});
+
 
 $('#basic_search_add').click(function(){
   var smile_element = $('#last_smile');
@@ -123,6 +131,10 @@ $("#upload_update").click(function(){
   
   console.log(row);
   $("#fileupload_copy").append(row);
+  
+  $(this).text("Files Added!");
+  $(this).toggleClass("btn-danger");
+  $(this).toggleClass("btn-info");
 
 });
 
@@ -132,6 +144,7 @@ function GetModels(){
   var index = 0;
   
   $("#models_choice_copy >tbody >tr").each(function(trindex, tritem){
+    //alert($(tritem).attr("visible"))
     if($(tritem).attr("visible") === "true")
       {
         var model = $(tritem).attr("model");
@@ -213,6 +226,7 @@ $('#commit-saved-btn').click(function(){
           "mol":$("#mol_file_string_copy").text(),
           "notes":$("#commit_notes_copy").text(),
           "name":$("#commit_name_copy").text(),
+          "email":$("#commit_email_copy").text(),
           "types":types,
           "unique_names":unique_names,
           "models":models,
@@ -250,11 +264,11 @@ $('#search_varify_btn').click(function(){
           {
             $('#valid_results').show();
             $('#unvalid_results').hide();
-            $('#last_picture').attr('src', "/static/" + d.search_result.content.imagepath);
+            $('#last_picture').attr('src', d.search_result.content.imagepath);
             $('#xlogp').text(d.search_result.content.xlogp); 
             $('#alogp').text(d.search_result.content.alogp); 
             $('#molecular_weight').text(d.search_result.content.molecularweight); 
-            $('#mf').text(d.search_result.content.mf); 
+            $('#mf').html(d.search_result.content.mf); 
             $('#std_inchikey').text(d.search_result.content.inchikey); 
             $('#std_inchi').text(d.search_result.content.inchi); 
             $('#last_smile').text(d.search_result.content.smiles); 
@@ -271,3 +285,21 @@ $('#search_varify_btn').click(function(){
   }
 });
 
+$("#commit-show-btn").click(function(){
+  if($(this).attr("visible")==="false")
+    {
+      $("div#commit_content").hide();
+      $(this).text("Show");
+      $(this).toggleClass("btn-primary");
+      $(this).toggleClass("btn-info");
+      $(this).attr("visible","true"); 
+    }
+  else
+    {
+      $("div#commit_content").show();
+      $(this).text("Hide");
+      $(this).toggleClass("btn-primary");
+      $(this).toggleClass("btn-info");
+      $(this).attr("visible","false"); 
+    }
+});
